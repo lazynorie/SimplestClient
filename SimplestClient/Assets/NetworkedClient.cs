@@ -112,6 +112,28 @@ public class NetworkedClient : MonoBehaviour
     {
         return isConnected;
     }
+}
 
 
+public static class ClientToServerSignifiers
+{
+    public const int Login = 1;
+    public const int CreateAccount = 2;
+}
+
+public static class ServerToClientSignifiers    
+{
+    public const int LoginResponse = 1;
+}
+
+public static class LoginResponses
+{
+    public const int Success = 1;
+
+    public const int FailureNameInUse = 2;
+    
+    public const int FailureNameInNotFound = 3;
+
+    public const int FailureIncorrectPassword = 4;
+    
 }
