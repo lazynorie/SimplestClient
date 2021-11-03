@@ -80,7 +80,7 @@ public static class ClientToServerSignifiers
     public const int CreateAccount = 2;
 }
 
-public static class ServerToClientSignifiers
+public static class ServerToClientSignifiers    
 {
     public const int LoginResponse = 1;
 }
