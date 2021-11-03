@@ -47,7 +47,7 @@ public class GameSystemManager : MonoBehaviour
         findJoinGameSessionButton.GetComponent<Button>().onClick.AddListener(findJoinGameSessionButtonPressed);
         placeHolderGameButton.GetComponent<Button>().onClick.AddListener(placeHolderGameButtonPressed);
 
-        
+        ChangeGameState(GameStates.Login);
     }
 
     // Update is called once per frame
