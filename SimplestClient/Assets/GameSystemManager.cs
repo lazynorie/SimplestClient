@@ -94,12 +94,13 @@ public class GameSystemManager : MonoBehaviour
 
     private void findJoinGameSessionButtonPressed()
     {
-        
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.AddToGameSessionQueue + "");
+        ChangeGameState(GameStates.WaitingForMatch);
     }
     
     private void placeHolderGameButtonPressed()
     {
-        
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
     }
     private void ToggleCreateValueChanged(bool newValue)
     {
