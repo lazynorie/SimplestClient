@@ -17,6 +17,8 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
+    string opponentsSymbol;
+
     private GameObject gameSystemManager;
 
     // Start is called before the first frame update
@@ -133,7 +135,12 @@ public class NetworkedClient : MonoBehaviour
         
         else if (signifier == ServerToClientSignifiers.GameSessionStarted)
         {
-            gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe); 
+            opponentsSymbol = (csv[1] == "X") ? "O" : "X";
+            bool myTurn = (int.Parse(csv[2]) == 1) ? true : false;
+            gameSystemManager.GetComponent<GameSystemManager>().InitGameSymbolsSetCurrentTurn(csv[1], opponentsSymbol, myTurn);
+            gameSystemManager.GetComponent<GameSystemManager>().chatRoomText.text = "";
+            gameSystemManager.GetComponent<GameSystemManager>().gameSessionID = int.Parse(csv[3]);
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
@@ -156,6 +163,9 @@ public static class ClientToServerSignifiers
     public const int CreateAccount = 2;
     public const int AddToGameSessionQueue = 3;
     public const int TicTacToePlay = 4;
+    public const int GameOver = 5;
+    public const int GameDrawn = 6;
+    public const int TicTacToeMoveMade = 7;
 }
 
 public static class ServerToClientSignifiers    
