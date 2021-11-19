@@ -132,6 +132,8 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameSessionStarted)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
+            bool myTurn = (int.Parse(csv[1]) == 1) ? true : false;
+            //gameSystemManager.GetComponent<GameSystemManager>().SetPlayerCurrentTurn(myTurn);
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
@@ -174,6 +176,8 @@ public static class ServerToClientSignifiers
     public const int OpponentTicTacToePlay = 3;
 
     public const int SendChatToOpponent = 4;
+    
+    public const int PlayerDC = 5;
 }
 
 public static class LoginResponses

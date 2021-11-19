@@ -32,6 +32,7 @@ public class GameSystemManager : MonoBehaviour
     public Button[] tictactoeSpace; //playable space for our game
     public int[] markedSpaces; //ID's which space was marked by which player
     public Text systemMessage;//Hold system msg
+    public bool myTurn, opponentTurn;
     
     // Start is called before the first frame update
     void Start()
