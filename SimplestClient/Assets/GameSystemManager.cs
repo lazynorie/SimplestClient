@@ -117,6 +117,8 @@ public class GameSystemManager : MonoBehaviour
             chatInput.GetComponent<InputField>().text = "";
         }
     }
+    
+    
 
     private void findJoinGameSessionButtonPressed()
     {
@@ -139,6 +141,10 @@ public class GameSystemManager : MonoBehaviour
         toggleCreate.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
+    public void AddOppositeMessageToChat(string msg)
+    {
+        chatText.text += msg;
+    }
     public void ChangeGameState(int newState)
     {
         // very tranditional way to do gamestates 

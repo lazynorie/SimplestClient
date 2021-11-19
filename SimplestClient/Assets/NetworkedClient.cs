@@ -139,6 +139,11 @@ public class NetworkedClient : MonoBehaviour
         {
             Debug.Log("Your foe does!!!!!!");
         }
+        else if (signifier == ServerToClientSignifiers.SendChatToOpponent)
+        {
+            string _msg = "\n" + csv[1] + ": " + csv[2];
+            gameSystemManager.GetComponent<GameSystemManager>().AddOppositeMessageToChat(_msg);
+        }
 
         
     }
@@ -157,6 +162,7 @@ public static class ClientToServerSignifiers
     public const int AddToGameSessionQueue = 3;
     public const int TicTacToePlay = 4;
     public const int PlayerMessage = 5;
+    
 
     
 }
@@ -169,7 +175,7 @@ public static class ServerToClientSignifiers
     
     public const int OpponentTicTacToePlay = 3;
 
-
+    public const int SendChatToOpponent = 4;
 }
 
 public static class LoginResponses

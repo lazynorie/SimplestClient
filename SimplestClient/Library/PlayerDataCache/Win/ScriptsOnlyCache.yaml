@@ -7,7 +7,6 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.IK.Editor.dll:
     - UnityEditor.U2D.IK.IKEditorManager
-    - UnityEditor.U2D.IK.IKGizmos
     Unity.2D.IK.Runtime.dll:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
@@ -54,27 +53,27 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1486}
+      Script: {instanceID: 1490}
     - Class: 114
-      Script: {instanceID: 1546}
+      Script: {instanceID: 1550}
     - Class: 114
-      Script: {instanceID: 1598}
+      Script: {instanceID: 1602}
     - Class: 114
-      Script: {instanceID: 2068}
+      Script: {instanceID: 2072}
     - Class: 114
-      Script: {instanceID: 2430}
+      Script: {instanceID: 2434}
     - Class: 114
-      Script: {instanceID: 2576}
+      Script: {instanceID: 2580}
     - Class: 114
-      Script: {instanceID: 2744}
+      Script: {instanceID: 2748}
     - Class: 114
-      Script: {instanceID: 2794}
+      Script: {instanceID: 2798}
     - Class: 114
-      Script: {instanceID: 2948}
+      Script: {instanceID: 2952}
     - Class: 114
-      Script: {instanceID: 3048}
+      Script: {instanceID: 3052}
     - Class: 114
-      Script: {instanceID: 3308}
+      Script: {instanceID: 3312}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
