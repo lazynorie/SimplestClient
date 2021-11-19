@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +31,7 @@ public class GameSystemManager : MonoBehaviour
     public Sprite[] playerIcons;// 0 = player1 icon(x) and 1 =player 2 icon(o)
     public Button[] tictactoeSpace; //playable space for our game
     public int[] markedSpaces; //ID's which space was marked by which player
-    
+    public Text systemMessage;//Hold system msg
     
     // Start is called before the first frame update
     void Start()
@@ -208,11 +209,28 @@ public class GameSystemManager : MonoBehaviour
         {
             if (solutions[i] == 3*(whoseTurn+1))
             {
-                Debug.Log("Player " + whoseTurn + " won!");
+                WinnerDisplay(i);
                 return;
             }
         }
+    }
 
+    void WinnerDisplay(int indexIn)
+    {
+        systemMessage.gameObject.SetActive(true);
+        if (whoseTurn == 0)
+        {
+            systemMessage.text = "Player X wins!";
+        }
+        else if (whoseTurn ==1)
+        {
+            systemMessage.text = "Player O wins!";
+        }
+
+        for (int i = 0; i < tictactoeSpace.Length; i++)
+        {
+            tictactoeSpace[i].interactable = false;
+        }
     }
     
     public void ChangeGameState(int newState)
