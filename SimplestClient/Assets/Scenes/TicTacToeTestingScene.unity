@@ -269,6 +269,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2028789853129118505, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
   m_PrefabInstance: {fileID: 1183473915}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &142162054 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6552555620059187520, guid: bdb8320158546e54c8a9b391654a0006, type: 3}
+  m_PrefabInstance: {fileID: 78503548}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacb5026d7b4b404eb5dd4cb13f66b0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &296874732 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2028789852647786475, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
@@ -452,6 +463,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1219542457}
     m_Modifications:
+    - target: {fileID: 2028789851903897389, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789851998475718, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789852197038849, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789852226720742, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789852385182886, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789852392877160, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789852647786475, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
     - target: {fileID: 2028789852984590184, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -540,6 +579,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: TicTacToe
       objectReference: {fileID: 0}
+    - target: {fileID: 2028789853455730747, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
+    - target: {fileID: 2028789853632746590, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142162054}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ce1c1201a9a38a44a4879f623e3447a, type: 3}
 --- !u!1 &1219542453

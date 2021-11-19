@@ -24,11 +24,12 @@ public class GameSystemManager : MonoBehaviour
     
     //TicTacToe
     GameObject ticTacToe;
-    public int whoTurn;//0 = player1 and 1= player2
+    public int whoseTurn;//0 = player1 and 1= player2
     public int turnCount;//
     public GameObject[] turnIcons; //displays whos turn it is
-    public Sprite[] playerIcons;// 0 = player1 icon and 1 =player 2 icon
+    public Sprite[] playerIcons;// 0 = player1 icon(x) and 1 =player 2 icon(o)
     public Button[] tictactoeSpace; //playable space for our game
+    public int[] markedSpaces; //ID's which space was marked by which player
     
     
     // Start is called before the first frame update
@@ -82,7 +83,7 @@ public class GameSystemManager : MonoBehaviour
 
     void GameSetup()
     {
-        whoTurn = 0;
+        whoseTurn = 0;
         turnCount = 0;
         turnIcons[0].SetActive(true);
         turnIcons[1].SetActive(false);
@@ -90,6 +91,11 @@ public class GameSystemManager : MonoBehaviour
         {
             tictactoeSpace[i].interactable = true;
             tictactoeSpace[i].GetComponent<Image>().sprite = null;
+        }
+
+        for (int i = 0; i <  markedSpaces.Length; i++)
+        {
+            markedSpaces[i] = -100;
         }
     }
 
@@ -155,6 +161,60 @@ public class GameSystemManager : MonoBehaviour
     {
         chatText.text += msg;
     }
+
+    public void TicTacToeButton(int WhichNumber)
+    {
+        tictactoeSpace[WhichNumber].image.sprite = playerIcons[whoseTurn];
+        tictactoeSpace[WhichNumber].interactable = false;
+
+        markedSpaces[WhichNumber] = whoseTurn+1;
+        turnCount++;
+        if (turnCount>4)
+        {
+            WinnerCheck();
+        }
+        
+
+        if (whoseTurn == 0)
+        {
+            whoseTurn = 1;
+            turnIcons[0].SetActive(false);
+            turnIcons[1].SetActive(true);
+        }
+        else
+        {
+            whoseTurn = 0;
+            turnIcons[0].SetActive(true);
+            turnIcons[1].SetActive(false);
+        }
+    }
+
+    void WinnerCheck()
+    {
+        //3 horizontal lines
+        int s1 = markedSpaces[0] + markedSpaces[1] + markedSpaces[2];
+        int s2 = markedSpaces[3] + markedSpaces[4] + markedSpaces[5];
+        int s3 = markedSpaces[6] + markedSpaces[7] + markedSpaces[8];
+        //3 vertical lines
+        int s4 = markedSpaces[0] + markedSpaces[3] + markedSpaces[6];
+        int s5 = markedSpaces[1] + markedSpaces[4] + markedSpaces[7];
+        int s6 = markedSpaces[2] + markedSpaces[5] + markedSpaces[8];
+        //2 diagonal lines
+        int s7 = markedSpaces[0] + markedSpaces[4] + markedSpaces[8];
+        int s8 = markedSpaces[2] + markedSpaces[4] + markedSpaces[6];
+        
+        var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 };
+        for (int i = 0; i < solutions.Length; i++)
+        {
+            if (solutions[i] == 3*(whoseTurn+1))
+            {
+                Debug.Log("Player " + whoseTurn + " won!");
+                return;
+            }
+        }
+
+    }
+    
     public void ChangeGameState(int newState)
     {
         // very tranditional way to do gamestates 

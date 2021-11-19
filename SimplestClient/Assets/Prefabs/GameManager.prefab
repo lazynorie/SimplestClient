@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chatText: {fileID: 0}
   userName: 
-  whoTurn: 0
+  whoseTurn: 0
   turnCount: 0
   turnIcons:
   - {fileID: 0}
@@ -63,3 +63,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  markedSpaces: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
