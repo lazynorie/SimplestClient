@@ -9,11 +9,18 @@ public class GameSystemManager : MonoBehaviour
         inputFieldPassword,
         buttonSubmit,
         toggleLogin,
-        toggleCreate;
+        toggleCreate,
+        chatInputEnterButton,
+        chatInput,
+    chatwindow;
 
     GameObject networkedClient;
 
     GameObject findJoinGameSessionButton, placeHolderGameButton;
+
+    public Text chatText;
+
+    public string userName;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,12 +39,19 @@ public class GameSystemManager : MonoBehaviour
                 toggleCreate = go;
             else if (go.name == "NetworkedClient")
                 networkedClient = go;
-            
             else if (go.name == "FindJoinGameSessionButton")
                 findJoinGameSessionButton = go;
             else if (go.name == "PlaceHolderGameButton")
                 placeHolderGameButton = go;
-           
+            else if (go.name == "ChatInputEnterButton")
+                chatInputEnterButton = go;
+            else if (go.name == "ChatInput")
+                chatInput = go;
+            else if (go.name == "Chatwindow")
+                chatwindow = go;
+            else if (go.name == "ChatText")
+                chatText = go.GetComponent<Text>();
+            
         }
            
         buttonSubmit.GetComponent<Button>().onClick.AddListener(SubmitButtonPress);
@@ -46,6 +60,7 @@ public class GameSystemManager : MonoBehaviour
         
         findJoinGameSessionButton.GetComponent<Button>().onClick.AddListener(findJoinGameSessionButtonPressed);
         placeHolderGameButton.GetComponent<Button>().onClick.AddListener(placeHolderGameButtonPressed);
+        chatInputEnterButton.GetComponent<Button>().onClick.AddListener(ChatInputEnterButtonPressed);
 
         ChangeGameState(GameStates.Login);
     }
@@ -92,6 +107,17 @@ public class GameSystemManager : MonoBehaviour
 
     }
 
+    private void ChatInputEnterButtonPressed()
+    {
+        string msg = chatInput.GetComponent<InputField>().text;
+        if (msg != "")
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(string.Join(",",ClientToServerSignifiers.PlayerMessage, userName, msg));
+            chatText.text+= "\n" + userName + ": " + msg;
+            chatInput.GetComponent<InputField>().text = "";
+        }
+    }
+
     private void findJoinGameSessionButtonPressed()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.AddToGameSessionQueue + "");
@@ -124,6 +150,9 @@ public class GameSystemManager : MonoBehaviour
         toggleCreate.SetActive(false);
         findJoinGameSessionButton.SetActive(false);
         placeHolderGameButton.SetActive(false);
+        //chatInputEnterButton.SetActive(false);
+        chatInput.SetActive(false);
+        chatwindow.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -145,6 +174,11 @@ public class GameSystemManager : MonoBehaviour
         else if (newState ==GameStates.PlayingTicTacToe)
         {
             placeHolderGameButton.SetActive(true);
+            //chatInputEnterButton.SetActive(true);
+            chatInput.SetActive(true);
+            chatwindow.SetActive(true);
+
+
         }
 
     }
