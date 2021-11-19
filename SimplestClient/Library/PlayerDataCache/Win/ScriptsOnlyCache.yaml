@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.IK.Editor.dll:
     - UnityEditor.U2D.IK.IKEditorManager
+    - UnityEditor.U2D.IK.IKGizmos
     Unity.2D.IK.Runtime.dll:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
@@ -30,6 +31,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
     - UnityEngine.UI.Text
@@ -53,27 +55,29 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1490}
+      Script: {instanceID: 1486}
     - Class: 114
-      Script: {instanceID: 1550}
+      Script: {instanceID: 1546}
     - Class: 114
-      Script: {instanceID: 1602}
+      Script: {instanceID: 1598}
     - Class: 114
-      Script: {instanceID: 2072}
+      Script: {instanceID: 2068}
     - Class: 114
-      Script: {instanceID: 2434}
+      Script: {instanceID: 2430}
     - Class: 114
-      Script: {instanceID: 2580}
+      Script: {instanceID: 2576}
     - Class: 114
-      Script: {instanceID: 2748}
+      Script: {instanceID: 2744}
     - Class: 114
-      Script: {instanceID: 2798}
+      Script: {instanceID: 2794}
     - Class: 114
-      Script: {instanceID: 2952}
+      Script: {instanceID: 2948}
     - Class: 114
-      Script: {instanceID: 3052}
+      Script: {instanceID: 3048}
     - Class: 114
-      Script: {instanceID: 3312}
+      Script: {instanceID: 3308}
+    - Class: 114
+      Script: {instanceID: 4914}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -111,7 +115,7 @@ ScriptsOnlyBuild:
     className: TMP_InputField
   - hash:
       serializedVersion: 2
-      Hash: ece70dc36e6c5544676e75e25db0a41b
+      Hash: 46392c24c3390185a6a672aff61300d8
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameSystemManager

@@ -12,7 +12,7 @@ public class GameSystemManager : MonoBehaviour
         toggleCreate,
         chatInputEnterButton,
         chatInput,
-    chatwindow;
+        chatwindow;
 
     GameObject networkedClient;
 
@@ -21,9 +21,20 @@ public class GameSystemManager : MonoBehaviour
     public Text chatText;
 
     public string userName;
+    
+    //TicTacToe
+    GameObject ticTacToe;
+    public int whoTurn;//0 = player1 and 1= player2
+    public int turnCount;//
+    public GameObject[] turnIcons; //displays whos turn it is
+    public Sprite[] playerIcons;// 0 = player1 icon and 1 =player 2 icon
+    public Button[] tictactoeSpace; //playable space for our game
+    
+    
     // Start is called before the first frame update
     void Start()
     {
+        GameSetup();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
         foreach (GameObject go in allObjects)
         {
@@ -52,6 +63,10 @@ public class GameSystemManager : MonoBehaviour
             else if (go.name == "ChatText")
                 chatText = go.GetComponent<Text>();
             
+            else if (go.name == "TicTacToe")
+                ticTacToe = go;
+           
+            
         }
            
         buttonSubmit.GetComponent<Button>().onClick.AddListener(SubmitButtonPress);
@@ -65,28 +80,23 @@ public class GameSystemManager : MonoBehaviour
         ChangeGameState(GameStates.Login);
     }
 
+    void GameSetup()
+    {
+        whoTurn = 0;
+        turnCount = 0;
+        turnIcons[0].SetActive(true);
+        turnIcons[1].SetActive(false);
+        for (int i = 0; i < tictactoeSpace.Length; i++)
+        {
+            tictactoeSpace[i].interactable = true;
+            tictactoeSpace[i].GetComponent<Image>().sprite = null;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.A))
-        {
-            ChangeGameState(GameStates.Login);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            ChangeGameState(GameStates.MainMenu);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            ChangeGameState(GameStates.WaitingForMatch);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            ChangeGameState(GameStates.PlayingTicTacToe);
-        }*/
+      
     }
 
     private void SubmitButtonPress()
@@ -159,6 +169,7 @@ public class GameSystemManager : MonoBehaviour
         //chatInputEnterButton.SetActive(false);
         chatInput.SetActive(false);
         chatwindow.SetActive(false);
+        ticTacToe.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -183,7 +194,7 @@ public class GameSystemManager : MonoBehaviour
             //chatInputEnterButton.SetActive(true);
             chatInput.SetActive(true);
             chatwindow.SetActive(true);
-
+            ticTacToe.SetActive(true);
 
         }
 

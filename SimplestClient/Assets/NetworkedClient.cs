@@ -114,18 +114,16 @@ public class NetworkedClient : MonoBehaviour
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
-
         string[] csv = msg.Split(',');
-
         int signifier = int.Parse(csv[0]);
-
         if (signifier == ServerToClientSignifiers.LoginResponse)
         {
             int loginResultSignifier = int.Parse(csv[1]);
-
+            
             if (loginResultSignifier == LoginResponses.Success)
             {
                 gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.MainMenu);
+                gameSystemManager.GetComponent<GameSystemManager>().userName = csv[2];
             }
             // on success load
             // ChangeGameState(GameStates.MainMenu);
