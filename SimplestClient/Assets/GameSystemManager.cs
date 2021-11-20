@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,6 +90,7 @@ public class GameSystemManager : MonoBehaviour
         turnCount = 0;
         turnIcons[0].SetActive(true);
         turnIcons[1].SetActive(false);
+        myTurn = false;
         for (int i = 0; i < tictactoeSpace.Length; i++)
         {
             tictactoeSpace[i].interactable = true;
@@ -166,28 +168,47 @@ public class GameSystemManager : MonoBehaviour
 
     public void TicTacToeButton(int WhichNumber)
     {
-        tictactoeSpace[WhichNumber].image.sprite = playerIcons[whoseTurn];
-        tictactoeSpace[WhichNumber].interactable = false;
-
-        markedSpaces[WhichNumber] = whoseTurn+1;
-        turnCount++;
-        if (turnCount>4)
+        if (myTurn)
         {
-            WinnerCheck();
+            DrawButton(WhichNumber, whoseTurn);
+
+            
+            turnCount++;
+            if (turnCount>4)
+            {
+                WinnerCheck();
+            }
+
+            myTurn = false;
+            opponentTurn = true;
+
+            if (whoseTurn == 0)
+            {
+                whoseTurn = 1;
+                turnIcons[0].SetActive(false);
+                turnIcons[1].SetActive(true);
+            }
+            else
+            {
+                whoseTurn = 0;
+                turnIcons[0].SetActive(true);
+                turnIcons[1].SetActive(false);
+            }
+            //send info to every play is made
+            //csv[0]siginifier  csv[1]which button   csv[2]change my turn  
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlayMade + "," + WhichNumber + "," +  whoseTurn + "," + opponentTurn);
         }
-        
-
-        if (whoseTurn == 0)
+    }
+    //this function set which player goes 1st
+    public void SetWhichPlayerStart(bool myTurn)
+    {
+        if (myTurn == true)
         {
-            whoseTurn = 1;
-            turnIcons[0].SetActive(false);
-            turnIcons[1].SetActive(true);
+            this.myTurn = true;
         }
         else
         {
-            whoseTurn = 0;
-            turnIcons[0].SetActive(true);
-            turnIcons[1].SetActive(false);
+            this.myTurn = false;
         }
     }
 
@@ -233,7 +254,13 @@ public class GameSystemManager : MonoBehaviour
             tictactoeSpace[i].interactable = false;
         }
     }
-    
+
+    public void DrawButton(int buttonNumber, int buttonShape)
+    {
+        tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
+        tictactoeSpace[buttonNumber].interactable = false;
+        markedSpaces[buttonNumber] = whoseTurn+1;
+    }
     public void ChangeGameState(int newState)
     {
         // very tranditional way to do gamestates 

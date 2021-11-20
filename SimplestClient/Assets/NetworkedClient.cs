@@ -133,19 +133,23 @@ public class NetworkedClient : MonoBehaviour
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
             bool myTurn = (int.Parse(csv[1]) == 1) ? true : false;
-            //gameSystemManager.GetComponent<GameSystemManager>().SetPlayerCurrentTurn(myTurn);
+            gameSystemManager.GetComponent<GameSystemManager>().SetWhichPlayerStart(myTurn);
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
             Debug.Log("Your foe does!!!!!!");
+            int button = int.Parse(csv[1]);
+            int shape = int.Parse(csv[2]);
+            int realShape = (shape + 1) % 2;
+            //update on opponent play on client
+            gameSystemManager.GetComponent<GameSystemManager>().DrawButton(button,realShape);
+            gameSystemManager.GetComponent<GameSystemManager>().myTurn = bool.Parse(csv[3]);
         }
         else if (signifier == ServerToClientSignifiers.SendChatToOpponent)
         {
             string _msg = "\n" + csv[1] + ": " + csv[2];
             gameSystemManager.GetComponent<GameSystemManager>().AddOppositeMessageToChat(_msg);
         }
-
-        
     }
 
     public bool IsConnected()
@@ -162,9 +166,10 @@ public static class ClientToServerSignifiers
     public const int AddToGameSessionQueue = 3;
     public const int TicTacToePlay = 4;
     public const int PlayerMessage = 5;
-    
+    public const int TicTacToePlayMade = 6;
 
-    
+
+
 }
 
 public static class ServerToClientSignifiers    

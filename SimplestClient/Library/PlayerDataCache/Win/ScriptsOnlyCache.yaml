@@ -7,7 +7,6 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.IK.Editor.dll:
     - UnityEditor.U2D.IK.IKEditorManager
-    - UnityEditor.U2D.IK.IKGizmos
     Unity.2D.IK.Runtime.dll:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
@@ -121,7 +120,7 @@ ScriptsOnlyBuild:
     className: TMP_InputField
   - hash:
       serializedVersion: 2
-      Hash: c449e261d9b8d00986fb2f8a9608f366
+      Hash: 79f0e70cb26024d0cd0a308cf54a8d80
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameSystemManager
