@@ -7,6 +7,11 @@ using UnityEngine.UI;
 
 public class GameSystemManager : MonoBehaviour
 {
+    //timer
+    private float ftime;
+    public bool start;
+    
+    
     GameObject  inputFielddUserName,
         inputFieldPassword,
         buttonSubmit,
@@ -30,10 +35,12 @@ public class GameSystemManager : MonoBehaviour
     public int turnCount;//
     public GameObject[] turnIcons; //displays whos turn it is
     public Sprite[] playerIcons;// 0 = player1 icon(x) and 1 =player 2 icon(o)
+    private int playerIconsdecider;
     public Button[] tictactoeSpace; //playable space for our game
     public int[] markedSpaces; //ID's which space was marked by which player
     public Text systemMessage;//Hold system msg
     public bool myTurn, opponentTurn;
+    public int playerID;
     
     // Start is called before the first frame update
     void Start()
@@ -86,10 +93,20 @@ public class GameSystemManager : MonoBehaviour
 
     void GameSetup()
     {
-        whoseTurn = 0;
+        playerID = -1;
+        
         turnCount = 0;
-        turnIcons[0].SetActive(true);
-        turnIcons[1].SetActive(false);
+        if (whoseTurn == 0)
+        {
+            
+            turnIcons[0].SetActive(true);
+            turnIcons[1].SetActive(false);
+        }
+        else if (whoseTurn == 1)
+        {
+            turnIcons[0].SetActive(false);
+            turnIcons[1].SetActive(true);
+        }
         myTurn = false;
         for (int i = 0; i < tictactoeSpace.Length; i++)
         {
@@ -106,7 +123,8 @@ public class GameSystemManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+        WinnerCheck();
+
     }
 
     private void SubmitButtonPress()
@@ -148,7 +166,7 @@ public class GameSystemManager : MonoBehaviour
     
     private void placeHolderGameButtonPressed()
     {
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlay + "");
+        ChangeGameState(GameStates.Login);
     }
     private void ToggleCreateValueChanged(bool newValue)
     {
@@ -170,14 +188,11 @@ public class GameSystemManager : MonoBehaviour
     {
         if (myTurn)
         {
-            DrawButton(WhichNumber, whoseTurn);
+            DrawButton(WhichNumber, playerID);
 
             
-            turnCount++;
-            if (turnCount>4)
-            {
-                WinnerCheck();
-            }
+            markedSpaces[WhichNumber] = playerID+1;
+          
 
             myTurn = false;
             opponentTurn = true;
@@ -195,8 +210,8 @@ public class GameSystemManager : MonoBehaviour
                 turnIcons[1].SetActive(false);
             }
             //send info to every play is made
-            //csv[0]siginifier  csv[1]which button   csv[2]change my turn  
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlayMade + "," + WhichNumber + "," +  whoseTurn + "," + opponentTurn);
+            //csv[0]siginifier  csv[1]which button   csv[2]change my turn  csv[3]tell server it's opponent's turn
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlayMade + "," + WhichNumber + "," +  playerID + "," + opponentTurn);
         }
     }
     //this function set which player goes 1st
@@ -212,7 +227,7 @@ public class GameSystemManager : MonoBehaviour
         }
     }
 
-    void WinnerCheck()
+    public void WinnerCheck()
     {
         //3 horizontal lines
         int s1 = markedSpaces[0] + markedSpaces[1] + markedSpaces[2];
@@ -229,37 +244,47 @@ public class GameSystemManager : MonoBehaviour
         var solutions = new int[] { s1, s2, s3, s4, s5, s6, s7, s8 };
         for (int i = 0; i < solutions.Length; i++)
         {
-            if (solutions[i] == 3*(whoseTurn+1))
-            {
-                WinnerDisplay(i);
+            if (solutions[i] == 3*(playerID+1))
+            { 
+               
+               WinnerDisplay();
                 return;
             }
         }
     }
 
-    void WinnerDisplay(int indexIn)
+    void WinnerDisplay()
     {
         systemMessage.gameObject.SetActive(true);
-        if (whoseTurn == 0)
-        {
-            systemMessage.text = "Player X wins!";
-        }
-        else if (whoseTurn ==1)
-        {
-            systemMessage.text = "Player O wins!";
-        }
+        systemMessage.text = "You Win!";
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.WinMsg.ToString());
+        DisableGamePlay();
+    }
 
+    public void DisableGamePlay()
+    {
         for (int i = 0; i < tictactoeSpace.Length; i++)
         {
             tictactoeSpace[i].interactable = false;
         }
     }
 
+    public void DisplayMessage(string msg)
+    {
+        systemMessage.gameObject.SetActive(true);
+        systemMessage.text = msg;
+    }
+
     public void DrawButton(int buttonNumber, int buttonShape)
     {
         tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
         tictactoeSpace[buttonNumber].interactable = false;
-        markedSpaces[buttonNumber] = whoseTurn+1;
+        if (turnCount>4)
+        {
+            WinnerCheck();
+        }
+        turnCount++;
+        
     }
     public void ChangeGameState(int newState)
     {

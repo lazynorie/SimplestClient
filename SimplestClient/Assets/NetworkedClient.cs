@@ -134,21 +134,36 @@ public class NetworkedClient : MonoBehaviour
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
             bool myTurn = (int.Parse(csv[1]) == 1) ? true : false;
             gameSystemManager.GetComponent<GameSystemManager>().SetWhichPlayerStart(myTurn);
+            if (myTurn == true)
+            {
+                gameSystemManager.GetComponent<GameSystemManager>().playerID = 0;
+            }
+            else if (myTurn == false)
+            {
+                gameSystemManager.GetComponent<GameSystemManager>().playerID = 1;
+            }
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
             Debug.Log("Your foe does!!!!!!");
             int button = int.Parse(csv[1]);
-            int shape = int.Parse(csv[2]);
-            int realShape = (shape + 1) % 2;
+            int shape =  int.Parse(csv[2]);
+            
             //update on opponent play on client
-            gameSystemManager.GetComponent<GameSystemManager>().DrawButton(button,realShape);
+            gameSystemManager.GetComponent<GameSystemManager>().DrawButton(button,shape);
             gameSystemManager.GetComponent<GameSystemManager>().myTurn = bool.Parse(csv[3]);
+            gameSystemManager.GetComponent<GameSystemManager>().WinnerCheck();
+            
         }
         else if (signifier == ServerToClientSignifiers.SendChatToOpponent)
         {
             string _msg = "\n" + csv[1] + ": " + csv[2];
             gameSystemManager.GetComponent<GameSystemManager>().AddOppositeMessageToChat(_msg);
+        }
+        else if (signifier == ServerToClientSignifiers.GGMsg)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().systemMessage.text = "You Lose!";
+            gameSystemManager.GetComponent<GameSystemManager>().DisableGamePlay();
         }
     }
 
@@ -167,6 +182,7 @@ public static class ClientToServerSignifiers
     public const int TicTacToePlay = 4;
     public const int PlayerMessage = 5;
     public const int TicTacToePlayMade = 6;
+    public const int WinMsg = 7;
 
 
 
@@ -183,6 +199,8 @@ public static class ServerToClientSignifiers
     public const int SendChatToOpponent = 4;
     
     public const int PlayerDC = 5;
+    
+    public const int GGMsg = 6;
 }
 
 public static class LoginResponses
