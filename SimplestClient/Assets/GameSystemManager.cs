@@ -31,6 +31,8 @@ public class GameSystemManager : MonoBehaviour
     public Text chatText;
 
     public string userName;
+
+    public int gameRoomID;
     
     //TicTacToe
     GameObject ticTacToe;
@@ -128,7 +130,7 @@ public class GameSystemManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         WinnerCheck();
@@ -167,9 +169,9 @@ public class GameSystemManager : MonoBehaviour
     private void enterObserverButtonButtonPressed()
     {
         string input = observeGameRoomInputField.GetComponent<InputField>().text;
-        if ( input != "")
+        if (input != "")
         {
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(string.Join(",", input));
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(string.Join(",", ClientToServerSignifiers.OBrequestSent,input));
             observeGameRoomInputField.GetComponent<InputField>().text = "";
         }
     }
@@ -304,6 +306,7 @@ public class GameSystemManager : MonoBehaviour
         turnCount++;
         
     }
+    
     public void ChangeGameState(int newState)
     {
         // very tranditional way to do gamestates 

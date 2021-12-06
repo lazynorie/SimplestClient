@@ -142,6 +142,7 @@ public class NetworkedClient : MonoBehaviour
             {
                 gameSystemManager.GetComponent<GameSystemManager>().playerID = 1;
             }
+            gameSystemManager.GetComponent<GameSystemManager>().gameRoomID = int.Parse(csv[2]);
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
@@ -164,6 +165,12 @@ public class NetworkedClient : MonoBehaviour
         {
             gameSystemManager.GetComponent<GameSystemManager>().systemMessage.text = "You Lose!";
             gameSystemManager.GetComponent<GameSystemManager>().DisableGamePlay();
+        }
+        else if (signifier ==ServerToClientSignifiers.OBrequestRecieved)
+        {
+            //string OBI = csv[1];
+            string currentboardresult;
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
         }
     }
 
