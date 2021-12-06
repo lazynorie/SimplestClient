@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 //using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,11 +20,13 @@ public class GameSystemManager : MonoBehaviour
         toggleCreate,
         chatInputEnterButton,
         chatInput,
-        chatwindow;
+        chatwindow,
+        observeGameRoomInputField
+        ;
 
     GameObject networkedClient;
 
-    GameObject findJoinGameSessionButton, placeHolderGameButton;
+    GameObject findJoinGameSessionButton, backToMainMenuButton,enterObserverButton;
 
     public Text chatText;
 
@@ -41,6 +44,7 @@ public class GameSystemManager : MonoBehaviour
     public Text systemMessage;//Hold system msg
     public bool myTurn, opponentTurn;
     public int playerID;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -63,10 +67,12 @@ public class GameSystemManager : MonoBehaviour
                 networkedClient = go;
             else if (go.name == "FindJoinGameSessionButton")
                 findJoinGameSessionButton = go;
-            else if (go.name == "PlaceHolderGameButton")
-                placeHolderGameButton = go;
+            else if (go.name == "BackToMainMenuButton")
+                backToMainMenuButton = go;
             else if (go.name == "ChatInputEnterButton")
                 chatInputEnterButton = go;
+            else if (go.name == "EnterObserverButton")
+                enterObserverButton = go;
             else if (go.name == "ChatInput")
                 chatInput = go;
             else if (go.name == "Chatwindow")
@@ -76,6 +82,8 @@ public class GameSystemManager : MonoBehaviour
             
             else if (go.name == "TicTacToe")
                 ticTacToe = go;
+            else if (go.name == "ObserveGameRoomInputField")
+                observeGameRoomInputField = go;
            
             
         }
@@ -85,9 +93,9 @@ public class GameSystemManager : MonoBehaviour
         toggleLogin.GetComponent<Toggle>().onValueChanged.AddListener(ToggleLoginValueChanged);
         
         findJoinGameSessionButton.GetComponent<Button>().onClick.AddListener(findJoinGameSessionButtonPressed);
-        placeHolderGameButton.GetComponent<Button>().onClick.AddListener(placeHolderGameButtonPressed);
+        backToMainMenuButton.GetComponent<Button>().onClick.AddListener(BacktoMainMenuButtonPressed);
         chatInputEnterButton.GetComponent<Button>().onClick.AddListener(ChatInputEnterButtonPressed);
-
+        enterObserverButton.GetComponent<Button>().onClick.AddListener(enterObserverButtonButtonPressed);
         ChangeGameState(GameStates.Login);
     }
 
@@ -155,6 +163,16 @@ public class GameSystemManager : MonoBehaviour
             chatInput.GetComponent<InputField>().text = "";
         }
     }
+
+    private void enterObserverButtonButtonPressed()
+    {
+        string input = observeGameRoomInputField.GetComponent<InputField>().text;
+        if ( input != "")
+        {
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(string.Join(",", input));
+            observeGameRoomInputField.GetComponent<InputField>().text = "";
+        }
+    }
     
     
 
@@ -164,9 +182,9 @@ public class GameSystemManager : MonoBehaviour
         ChangeGameState(GameStates.WaitingForMatch);
     }
     
-    private void placeHolderGameButtonPressed()
+    private void BacktoMainMenuButtonPressed()
     {
-        ChangeGameState(GameStates.Login);
+        ChangeGameState(GameStates.MainMenu);
     }
     private void ToggleCreateValueChanged(bool newValue)
     {
@@ -296,11 +314,12 @@ public class GameSystemManager : MonoBehaviour
         toggleLogin.SetActive(false);
         toggleCreate.SetActive(false);
         findJoinGameSessionButton.SetActive(false);
-        placeHolderGameButton.SetActive(false);
+        backToMainMenuButton.SetActive(false);
         //chatInputEnterButton.SetActive(false);
         chatInput.SetActive(false);
         chatwindow.SetActive(false);
         ticTacToe.SetActive(false);
+        observeGameRoomInputField.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -313,6 +332,7 @@ public class GameSystemManager : MonoBehaviour
         else if (newState ==GameStates.MainMenu)
         {
             findJoinGameSessionButton.SetActive(true);
+            observeGameRoomInputField.SetActive(true);
             
         }
         else if (newState ==GameStates.WaitingForMatch)
@@ -321,7 +341,7 @@ public class GameSystemManager : MonoBehaviour
         }
         else if (newState ==GameStates.PlayingTicTacToe)
         {
-            placeHolderGameButton.SetActive(true);
+            backToMainMenuButton.SetActive(true);
             //chatInputEnterButton.SetActive(true);
             chatInput.SetActive(true);
             chatwindow.SetActive(true);

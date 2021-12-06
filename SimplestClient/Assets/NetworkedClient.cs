@@ -183,6 +183,7 @@ public static class ClientToServerSignifiers
     public const int PlayerMessage = 5;
     public const int TicTacToePlayMade = 6;
     public const int WinMsg = 7;
+    public const int OBrequestSent = 8;
 
 
 
@@ -191,16 +192,12 @@ public static class ClientToServerSignifiers
 public static class ServerToClientSignifiers    
 {
     public const int LoginResponse = 1;
-    
     public const int GameSessionStarted = 2;
-    
     public const int OpponentTicTacToePlay = 3;
-
     public const int SendChatToOpponent = 4;
-    
     public const int PlayerDC = 5;
-    
     public const int GGMsg = 6;
+    public const int OBrequestRecieved = 8;
 }
 
 public static class LoginResponses
