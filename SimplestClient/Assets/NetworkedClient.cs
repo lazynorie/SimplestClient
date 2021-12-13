@@ -158,6 +158,16 @@ public class NetworkedClient : MonoBehaviour
             gameSystemManager.GetComponent<GameSystemManager>().WinnerCheck();
             
         }
+        else if (signifier == ServerToClientSignifiers.UpDateOB)
+        {
+            int button = int.Parse(csv[1]);
+            int shape =  int.Parse(csv[2]);
+            
+            //update on opponent play on client
+            gameSystemManager.GetComponent<GameSystemManager>().DrawButton(button,shape);
+            //gameSystemManager.GetComponent<GameSystemManager>().myTurn = bool.Parse(csv[3]);
+            gameSystemManager.GetComponent<GameSystemManager>().WinnerCheck();
+        }
         else if (signifier == ServerToClientSignifiers.SendChatToOpponent)
         {
             string _msg = "\n" + csv[1] + ": " + csv[2];
@@ -177,7 +187,6 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.UpdateCurrentBoardToOB)
         {
             string obID = csv[1];
-            
         }
     }
 
@@ -213,6 +222,8 @@ public static class ServerToClientSignifiers
     public const int GGMsg = 6;
     public const int OBrequestRecieved = 8;
     public const int UpdateCurrentBoardToOB = 9;
+    public const int UpDateOB = 10;
+    
 }
 
 public static class LoginResponses
