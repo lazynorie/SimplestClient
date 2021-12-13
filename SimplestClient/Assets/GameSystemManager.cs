@@ -234,16 +234,18 @@ public class GameSystemManager : MonoBehaviour
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToePlayMade + "," + WhichNumber + "," +  playerID + "," + opponentTurn);
         }
     }
-    //this function set which player goes 1st
+    //this method set which player goes 1st
     public void SetWhichPlayerStart(bool myTurn)
     {
         if (myTurn == true)
         {
             this.myTurn = true;
+            systemMessage.text = "You start 1st";
         }
         else
         {
             this.myTurn = false;
+            systemMessage.text = "Enemy starts 1st";
         }
     }
 
@@ -268,7 +270,7 @@ public class GameSystemManager : MonoBehaviour
             { 
                
                WinnerDisplay();
-                return;
+               return;
             }
         }
     }
@@ -289,6 +291,14 @@ public class GameSystemManager : MonoBehaviour
         }
     }
 
+    public void EnableGamePlay()
+    {
+        for (int i = 0; i < tictactoeSpace.Length; i++)
+        {
+            tictactoeSpace[i].interactable = true;
+        }
+    }
+
     public void DisplayMessage(string msg)
     {
         systemMessage.gameObject.SetActive(true);
@@ -303,8 +313,20 @@ public class GameSystemManager : MonoBehaviour
         {
             WinnerCheck();
         }
+
+        if (turnCount == 9)
+        {
+            WinnerCheck();
+        }
         turnCount++;
-        
+    }
+
+    public void CleanButton(int buttonNumber, int buttonShape)
+    {
+        tictactoeSpace[buttonNumber].image.sprite = null;
+        tictactoeSpace[buttonNumber].interactable = true;
+        systemMessage.text = "";
+        turnCount--;
     }
     
     public void ChangeGameState(int newState)
@@ -367,3 +389,4 @@ public static class GameStates
     //public const int Login = 1;
 
 }
+

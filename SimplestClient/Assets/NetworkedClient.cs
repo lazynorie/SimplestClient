@@ -132,6 +132,8 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.GameSessionStarted)
         {
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
+            
+            //decide who goes first
             bool myTurn = (int.Parse(csv[1]) == 1) ? true : false;
             gameSystemManager.GetComponent<GameSystemManager>().SetWhichPlayerStart(myTurn);
             if (myTurn == true)
@@ -172,6 +174,11 @@ public class NetworkedClient : MonoBehaviour
             string currentboardresult;
             gameSystemManager.GetComponent<GameSystemManager>().ChangeGameState(GameStates.PlayingTicTacToe);
         }
+        else if (signifier == ServerToClientSignifiers.UpdateCurrentBoardToOB)
+        {
+            string obID = csv[1];
+            
+        }
     }
 
     public bool IsConnected()
@@ -205,6 +212,7 @@ public static class ServerToClientSignifiers
     public const int PlayerDC = 5;
     public const int GGMsg = 6;
     public const int OBrequestRecieved = 8;
+    public const int UpdateCurrentBoardToOB = 9;
 }
 
 public static class LoginResponses
