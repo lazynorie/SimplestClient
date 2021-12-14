@@ -163,8 +163,6 @@ public class GameSystemManager : MonoBehaviour
        
         WinnerCheck();
         DrawCheck();
-        Debug.Log("Current Turn: " + turnCount);
-        Debug.Log("Recording: "+ tempReplay);
     }
     
     private void DropDownChanged()
@@ -204,13 +202,14 @@ public class GameSystemManager : MonoBehaviour
         foreach (var play in movePlayed)
         {
             turn++;
-            DrawButton(play,turn%2);
+            yield return new WaitForSeconds(0.5f);
+            DrawButtonInReplay(play,turn%2);
         }
-        yield return new WaitForSeconds(0.5f);
+        
     }
     private void PlayReplayButtonPressed()
     {
-        
+        systemMessage.text = "game replay";
         string path = Application.dataPath + Path.DirectorySeparatorChar + lastUsedIndex + ".txt";
         LinkedList<int> movePlayed = new LinkedList<int>();
         if (File.Exists(path))
@@ -224,7 +223,6 @@ public class GameSystemManager : MonoBehaviour
                string[] csv = line.Split(',');
                for (int i = 0; i < csv.Length-1; i++)
                {
-                   Debug.Log(csv[i]);
                    movePlayed.AddLast(int.Parse(csv[i]));
                }
                
@@ -234,11 +232,20 @@ public class GameSystemManager : MonoBehaviour
             myTurn = true;
             EnableGamePlay();
             //delayBetweenPlay(movePlayed);
-            foreach (var play in movePlayed )
-            {
+            
+            float nextPlayTime = 0.0f;
+            float period = 1.0f;
+
+            StartCoroutine(delayBetweenPlay(movePlayed));
+            
+                /*foreach (var play in movePlayed )
+                {
                     turn++;
-                    DrawButton(play,turn%2);
-            }
+                    DrawButtonInReplay(play,turn%2);
+                    
+                }*/
+                
+           
            
             
         }
@@ -440,6 +447,12 @@ public class GameSystemManager : MonoBehaviour
         
     }
 
+    public void DrawButtonInReplay(int buttonNumber, int buttonShape)
+    {
+        tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
+        tictactoeSpace[buttonNumber].interactable = false;
+    }
+
     public void DrawCheck()
     {
         if (turnCount == 9)
@@ -488,6 +501,7 @@ public class GameSystemManager : MonoBehaviour
         resetButton.SetActive(false);
         saveReplayButton.SetActive(false);
         playReplayBUtton.SetActive(false);
+        selectReplayDropDown.SetActive(false);
 
         if (newState == GameStates.Login)
         {
