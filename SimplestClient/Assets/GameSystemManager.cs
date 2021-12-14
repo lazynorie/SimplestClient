@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
+using Unity.IO.LowLevel.Unsafe;
 //using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +13,9 @@ public class GameSystemManager : MonoBehaviour
     //timer
     private float ftime;
     public bool start;
-    
+
+    public const int IStartFirst = 0;
+    public const int TheyStartFirst = 1;
     
     GameObject  inputFielddUserName,
         inputFieldPassword,
@@ -22,7 +26,10 @@ public class GameSystemManager : MonoBehaviour
         resetButton,
         chatInput,
         chatwindow,
-        observeGameRoomInputField;
+        observeGameRoomInputField,
+        saveReplayButton,
+        selectReplayDropDown,
+        playReplayBUtton;
 
     GameObject networkedClient;
 
@@ -47,10 +54,16 @@ public class GameSystemManager : MonoBehaviour
     public bool myTurn, opponentTurn;
     public int playerID;
     
-    
+    //REPLAY
+    public static LinkedList<Replay> replays;
+    public string tempReplay;
+    private static uint lastUsedIndex;
+    public const string ReplayMetaFile = "ReplayIndicesAndName.txt";
+
     // Start is called before the first frame update
     void Start()
     {
+        tempReplay = "";
         GameSetup();
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
         foreach (GameObject go in allObjects)
@@ -83,12 +96,17 @@ public class GameSystemManager : MonoBehaviour
                 chatwindow = go;
             else if (go.name == "ChatText")
                 chatText = go.GetComponent<Text>();
-            
             else if (go.name == "TicTacToe")
                 ticTacToe = go;
             else if (go.name == "ObserveGameRoomInputField")
                 observeGameRoomInputField = go;
-           
+            else if (go.name == "SaveReplayButton")
+                saveReplayButton = go;
+            else if (go.name == "SelectReplayDropDown")
+                selectReplayDropDown = (GameObject)go;
+            else if (go.name == "PlayReplayBUtton")
+                playReplayBUtton = go;
+            
             
         }
            
@@ -101,8 +119,14 @@ public class GameSystemManager : MonoBehaviour
         chatInputEnterButton.GetComponent<Button>().onClick.AddListener(ChatInputEnterButtonPressed);
         enterObserverButton.GetComponent<Button>().onClick.AddListener(enterObserverButtonButtonPressed);
         resetButton.GetComponent<Button>().onClick.AddListener(ClearBoard);
+        saveReplayButton.GetComponent<Button>().onClick.AddListener(saveReplayButtonPressed); 
+        selectReplayDropDown.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { DropDownChanged(); });
+        playReplayBUtton.GetComponent<Button>().onClick.AddListener(PlayReplayButtonPressed); 
         ChangeGameState(GameStates.Login);
     }
+
+   
+
 
     void GameSetup()
     {
@@ -136,16 +160,105 @@ public class GameSystemManager : MonoBehaviour
     
     void Update()
     {
-        if (turnCount>4)
+       
+        WinnerCheck();
+        DrawCheck();
+        Debug.Log("Current Turn: " + turnCount);
+        Debug.Log("Recording: "+ tempReplay);
+    }
+    
+    private void DropDownChanged()
+    {
+        int menuIndex = selectReplayDropDown.GetComponent<Dropdown>().value;
+        List<Dropdown.OptionData> menuOptions = selectReplayDropDown.GetComponent<Dropdown>().options;
+        string value = menuOptions[menuIndex].text;
+        ReplayDropDownChanged(value);
+    }
+
+    public void ReplayDropDownChanged(string value)
+    {
+        throw new NotImplementedException();
+    }
+    
+    private void saveReplayButtonPressed()
+    {
+        if (tempReplay!="")
         {
-            WinnerCheck();
+            lastUsedIndex++;
+            /*Replay r = new Replay(lastUsedIndex);
+            replays.AddLast(r);
+            SavePartyMetaData();
+            r.SaveReplay(tempReplay);*/
+            StreamWriter sw = new StreamWriter(Application.dataPath + Path.DirectorySeparatorChar + lastUsedIndex + ".txt");
+            sw.Write(tempReplay);
+            sw.Close();
+            tempReplay = "";
         }
-        if (turnCount == 9)
+        else
+            Debug.Log("no play yet");
+    }
+
+    IEnumerator delayBetweenPlay(LinkedList<int> movePlayed)
+    {
+        int turn = 0;
+        foreach (var play in movePlayed)
         {
-            WinnerCheck();
-            DrawCheck();
+            turn++;
+            DrawButton(play,turn%2);
         }
-        Debug.Log(turnCount);
+        yield return new WaitForSeconds(0.5f);
+    }
+    private void PlayReplayButtonPressed()
+    {
+        
+        string path = Application.dataPath + Path.DirectorySeparatorChar + lastUsedIndex + ".txt";
+        LinkedList<int> movePlayed = new LinkedList<int>();
+        if (File.Exists(path))
+        {
+            string line = "";
+            int turn = 0;
+            StreamReader sr = new StreamReader(path);
+            while ((line = sr.ReadLine()) != null)
+            {
+               
+               string[] csv = line.Split(',');
+               for (int i = 0; i < csv.Length-1; i++)
+               {
+                   Debug.Log(csv[i]);
+                   movePlayed.AddLast(int.Parse(csv[i]));
+               }
+               
+            }
+            ChangeGameState(GameStates.PlayingTicTacToe);
+            //ClearBoard();
+            myTurn = true;
+            EnableGamePlay();
+            //delayBetweenPlay(movePlayed);
+            foreach (var play in movePlayed )
+            {
+                    turn++;
+                    DrawButton(play,turn%2);
+            }
+           
+            
+        }
+    }
+    
+    static public void SavePartyMetaData()
+    {
+        StreamWriter sw = new StreamWriter(Application.dataPath + Path.DirectorySeparatorChar + ReplayMetaFile);
+
+
+        sw.WriteLine("1," + lastUsedIndex);
+
+
+        foreach (Replay pData in replays)
+        {
+            sw.WriteLine("2," + pData.index + "," + pData.name);
+        }
+
+        sw.Close();
+
     }
 
     private void SubmitButtonPress()
@@ -194,6 +307,8 @@ public class GameSystemManager : MonoBehaviour
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.AddToGameSessionQueue + "");
         ChangeGameState(GameStates.WaitingForMatch);
     }
+    
+  
     
     private void BacktoMainMenuButtonPressed()
     {
@@ -251,6 +366,7 @@ public class GameSystemManager : MonoBehaviour
         {
             this.myTurn = true;
             systemMessage.text = "You start 1st";
+            EnableGamePlay();
         }
         else
         {
@@ -316,18 +432,24 @@ public class GameSystemManager : MonoBehaviour
 
     public void DrawButton(int buttonNumber, int buttonShape)
     {
-       
+        WinnerCheck();
         tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
         tictactoeSpace[buttonNumber].interactable = false;
+        tempReplay += buttonNumber.ToString() + ",";
         turnCount++;
+        
     }
 
     public void DrawCheck()
     {
-        systemMessage.gameObject.SetActive(true);
-        systemMessage.text = "You Draw!";
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.GameDraw.ToString());
-        DisableGamePlay();
+        if (turnCount == 9)
+        {
+            systemMessage.gameObject.SetActive(true);
+            systemMessage.text = "You Draw!";
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.GameDraw.ToString());
+            DisableGamePlay();
+        }
+       
     }
     
     public void ClearBoard()
@@ -341,8 +463,10 @@ public class GameSystemManager : MonoBehaviour
         }
 
         turnCount = 0;
-        EnableGamePlay();
+        //EnableGamePlay();
+        tempReplay = "";
         systemMessage.text = " ClearBoard";
+        SetWhichPlayerStart(myTurn);
     }
     
     public void ChangeGameState(int newState)
@@ -362,6 +486,8 @@ public class GameSystemManager : MonoBehaviour
         ticTacToe.SetActive(false);
         observeGameRoomInputField.SetActive(false);
         resetButton.SetActive(false);
+        saveReplayButton.SetActive(false);
+        playReplayBUtton.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -375,6 +501,7 @@ public class GameSystemManager : MonoBehaviour
         {
             findJoinGameSessionButton.SetActive(true);
             observeGameRoomInputField.SetActive(true);
+            playReplayBUtton.SetActive(true);
             
         }
         else if (newState ==GameStates.WaitingForMatch)
@@ -388,7 +515,8 @@ public class GameSystemManager : MonoBehaviour
             chatInput.SetActive(true);
             chatwindow.SetActive(true);
             ticTacToe.SetActive(true);
-            resetButton.SetActive(true);
+            resetButton.SetActive(false);
+            saveReplayButton.SetActive(true);
 
 
         }
@@ -411,5 +539,43 @@ public static class GameStates
 public class Replay
 {
     
+    
+    public uint index;
+    public string name;
+
+    public Replay(uint index)
+    {
+        this.index = index;
+        name = index.ToString();
+    }
+    
+    public void SaveReplay(string replay)
+    {
+        StreamWriter sw = new StreamWriter(Application.dataPath + Path.DirectorySeparatorChar + index + ".txt");
+        sw.Write(replay);
+        sw.Close();
+    }
+
+    public void LoadReplay()
+    {
+        string path = Application.dataPath + Path.DirectorySeparatorChar + index + ".txt";
+
+        if (File.Exists(path))
+        {
+            string line = "";
+            StreamReader sr = new StreamReader(path);
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] csv = line.Split(',');
+                
+            }
+        }
+        
+    }
 }
+
+
+
+
 

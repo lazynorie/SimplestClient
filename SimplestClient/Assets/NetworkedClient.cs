@@ -141,6 +141,7 @@ public class NetworkedClient : MonoBehaviour
                 gameSystemManager.GetComponent<GameSystemManager>().playerID = 1;
             }
             gameSystemManager.GetComponent<GameSystemManager>().gameRoomID = int.Parse(csv[2]);
+            gameSystemManager.GetComponent<GameSystemManager>().tempReplay = "";
         }
         else if (signifier == ServerToClientSignifiers.OpponentTicTacToePlay)
         {
