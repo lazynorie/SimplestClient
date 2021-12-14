@@ -19,6 +19,7 @@ public class GameSystemManager : MonoBehaviour
         toggleLogin,
         toggleCreate,
         chatInputEnterButton,
+        resetButton,
         chatInput,
         chatwindow,
         observeGameRoomInputField;
@@ -72,6 +73,8 @@ public class GameSystemManager : MonoBehaviour
                 backToMainMenuButton = go;
             else if (go.name == "ChatInputEnterButton")
                 chatInputEnterButton = go;
+            else if (go.name == "ResetButton")
+                resetButton = go;
             else if (go.name == "EnterObserverButton")
                 enterObserverButton = go;
             else if (go.name == "ChatInput")
@@ -97,6 +100,7 @@ public class GameSystemManager : MonoBehaviour
         backToMainMenuButton.GetComponent<Button>().onClick.AddListener(BacktoMainMenuButtonPressed);
         chatInputEnterButton.GetComponent<Button>().onClick.AddListener(ChatInputEnterButtonPressed);
         enterObserverButton.GetComponent<Button>().onClick.AddListener(enterObserverButtonButtonPressed);
+        resetButton.GetComponent<Button>().onClick.AddListener(ClearBoard);
         ChangeGameState(GameStates.Login);
     }
 
@@ -135,10 +139,11 @@ public class GameSystemManager : MonoBehaviour
         if (turnCount>4)
         {
             WinnerCheck();
-            if (turnCount == 9)
-            {
-                DrawCheck();
-            }
+        }
+        if (turnCount == 9)
+        {
+            WinnerCheck();
+            DrawCheck();
         }
         Debug.Log(turnCount);
     }
@@ -192,6 +197,7 @@ public class GameSystemManager : MonoBehaviour
     
     private void BacktoMainMenuButtonPressed()
     {
+        ClearBoard();
         ChangeGameState(GameStates.MainMenu);
     }
     private void ToggleCreateValueChanged(bool newValue)
@@ -313,14 +319,6 @@ public class GameSystemManager : MonoBehaviour
        
         tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
         tictactoeSpace[buttonNumber].interactable = false;
-        
-        if (turnCount>4)
-        {
-            WinnerCheck();
-        }
-        
-
-       
         turnCount++;
     }
 
@@ -331,12 +329,20 @@ public class GameSystemManager : MonoBehaviour
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.GameDraw.ToString());
         DisableGamePlay();
     }
-    public void CleanButton(int buttonNumber, int buttonShape)
+    
+    public void ClearBoard()
     {
-        tictactoeSpace[buttonNumber].image.sprite = null;
-        tictactoeSpace[buttonNumber].interactable = true;
-        systemMessage.text = "";
-        turnCount--;
+        for (int i = 0; i < 9; i++)
+        {
+            
+            tictactoeSpace[i].image.sprite = null;
+            tictactoeSpace[i].interactable = true;
+            markedSpaces[i] = -100;
+        }
+
+        turnCount = 0;
+        EnableGamePlay();
+        systemMessage.text = " ClearBoard";
     }
     
     public void ChangeGameState(int newState)
@@ -355,6 +361,7 @@ public class GameSystemManager : MonoBehaviour
         chatwindow.SetActive(false);
         ticTacToe.SetActive(false);
         observeGameRoomInputField.SetActive(false);
+        resetButton.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -381,6 +388,8 @@ public class GameSystemManager : MonoBehaviour
             chatInput.SetActive(true);
             chatwindow.SetActive(true);
             ticTacToe.SetActive(true);
+            resetButton.SetActive(true);
+
 
         }
 
