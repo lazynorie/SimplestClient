@@ -29,7 +29,8 @@ public class GameSystemManager : MonoBehaviour
         observeGameRoomInputField,
         saveReplayButton,
         selectReplayDropDown,
-        playReplayBUtton;
+        playReplayBUtton,
+        inputFieldReplayNumber;
 
     GameObject networkedClient;
 
@@ -106,6 +107,9 @@ public class GameSystemManager : MonoBehaviour
                 selectReplayDropDown = (GameObject)go;
             else if (go.name == "PlayReplayBUtton")
                 playReplayBUtton = go;
+            if (go.name == "InputFieldReplayNumber")
+                inputFieldReplayNumber = go;
+            
             
             
         }
@@ -160,11 +164,10 @@ public class GameSystemManager : MonoBehaviour
     
     void Update()
     {
-       
         WinnerCheck();
         DrawCheck();
     }
-    
+    //Replays
     private void DropDownChanged()
     {
         int menuIndex = selectReplayDropDown.GetComponent<Dropdown>().value;
@@ -183,10 +186,6 @@ public class GameSystemManager : MonoBehaviour
         if (tempReplay!="")
         {
             lastUsedIndex++;
-            /*Replay r = new Replay(lastUsedIndex);
-            replays.AddLast(r);
-            SavePartyMetaData();
-            r.SaveReplay(tempReplay);*/
             StreamWriter sw = new StreamWriter(Application.dataPath + Path.DirectorySeparatorChar + lastUsedIndex + ".txt");
             sw.Write(tempReplay);
             sw.Close();
@@ -209,8 +208,10 @@ public class GameSystemManager : MonoBehaviour
     }
     private void PlayReplayButtonPressed()
     {
+        
+        string input = inputFieldReplayNumber.GetComponent<InputField>().text;
         systemMessage.text = "game replay";
-        string path = Application.dataPath + Path.DirectorySeparatorChar + lastUsedIndex + ".txt";
+        string path = Application.dataPath + Path.DirectorySeparatorChar + input + ".txt";
         LinkedList<int> movePlayed = new LinkedList<int>();
         if (File.Exists(path))
         {
@@ -219,36 +220,26 @@ public class GameSystemManager : MonoBehaviour
             StreamReader sr = new StreamReader(path);
             while ((line = sr.ReadLine()) != null)
             {
-               
-               string[] csv = line.Split(',');
-               for (int i = 0; i < csv.Length-1; i++)
-               {
-                   movePlayed.AddLast(int.Parse(csv[i]));
-               }
-               
+
+                string[] csv = line.Split(',');
+                for (int i = 0; i < csv.Length - 1; i++)
+                {
+                    movePlayed.AddLast(int.Parse(csv[i]));
+                }
+
             }
+
             ChangeGameState(GameStates.PlayingTicTacToe);
-            //ClearBoard();
             myTurn = true;
             EnableGamePlay();
-            //delayBetweenPlay(movePlayed);
-            
             float nextPlayTime = 0.0f;
             float period = 1.0f;
 
             StartCoroutine(delayBetweenPlay(movePlayed));
-            
-                /*foreach (var play in movePlayed )
-                {
-                    turn++;
-                    DrawButtonInReplay(play,turn%2);
-                    
-                }*/
-                
-           
-           
-            
+
         }
+        else
+            systemMessage.text = "Replay you looking isn't valid.";
     }
     
     static public void SavePartyMetaData()
@@ -268,6 +259,7 @@ public class GameSystemManager : MonoBehaviour
 
     }
 
+    //Chat room
     private void SubmitButtonPress()
     {
         string n = inputFielddUserName.GetComponent<InputField>().text;
@@ -297,6 +289,7 @@ public class GameSystemManager : MonoBehaviour
         }
     }
 
+    //OB
     private void enterObserverButtonButtonPressed()
     {
         string input = observeGameRoomInputField.GetComponent<InputField>().text;
@@ -317,11 +310,6 @@ public class GameSystemManager : MonoBehaviour
     
   
     
-    private void BacktoMainMenuButtonPressed()
-    {
-        ClearBoard();
-        ChangeGameState(GameStates.MainMenu);
-    }
     private void ToggleCreateValueChanged(bool newValue)
     {
         toggleLogin.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
@@ -336,6 +324,14 @@ public class GameSystemManager : MonoBehaviour
         chatText.text += msg;
     }
 
+    private void BacktoMainMenuButtonPressed()
+    {
+        ClearBoard();
+        ChangeGameState(GameStates.MainMenu);
+        systemMessage.text = "";
+    }
+    
+    //GameBoard
     public void TicTacToeButton(int WhichNumber)
     {
         if (myTurn)
@@ -502,6 +498,7 @@ public class GameSystemManager : MonoBehaviour
         saveReplayButton.SetActive(false);
         playReplayBUtton.SetActive(false);
         selectReplayDropDown.SetActive(false);
+        inputFieldReplayNumber.SetActive(false);
 
         if (newState == GameStates.Login)
         {
@@ -516,6 +513,7 @@ public class GameSystemManager : MonoBehaviour
             findJoinGameSessionButton.SetActive(true);
             observeGameRoomInputField.SetActive(true);
             playReplayBUtton.SetActive(true);
+            inputFieldReplayNumber.SetActive(true);
             
         }
         else if (newState ==GameStates.WaitingForMatch)
