@@ -177,7 +177,13 @@ public class NetworkedClient : MonoBehaviour
         {
             gameSystemManager.GetComponent<GameSystemManager>().systemMessage.text = "You Lose!";
             gameSystemManager.GetComponent<GameSystemManager>().DisableGamePlay();
+        } 
+        else if (signifier == ServerToClientSignifiers.DrawMsg)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().systemMessage.text = "You Draw!";
+            gameSystemManager.GetComponent<GameSystemManager>().DisableGamePlay();
         }
+        
         else if (signifier ==ServerToClientSignifiers.OBrequestRecieved)
         {
             //string OBI = csv[1];
@@ -207,6 +213,7 @@ public static class ClientToServerSignifiers
     public const int TicTacToePlayMade = 6;
     public const int WinMsg = 7;
     public const int OBrequestSent = 8;
+    public const int GameDraw = 9;
 
 
 
@@ -223,7 +230,8 @@ public static class ServerToClientSignifiers
     public const int OBrequestRecieved = 8;
     public const int UpdateCurrentBoardToOB = 9;
     public const int UpDateOB = 10;
-    
+    public const int DrawMsg = 11;
+
 }
 
 public static class LoginResponses
@@ -237,3 +245,4 @@ public static class LoginResponses
     public const int FailureIncorrectPassword = 4;
     
 }
+

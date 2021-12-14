@@ -11,6 +11,8 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
+    - UnityEditor.Tilemaps.GridPaletteBrushes
+    - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.SceneViewOpenTilePaletteHelper
     - UnityEditor.Tilemaps.TileDragAndDropManager
@@ -63,39 +65,39 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1462}
     - Class: 114
-      Script: {instanceID: 1514}
+      Script: {instanceID: 1518}
     - Class: 114
-      Script: {instanceID: 1574}
+      Script: {instanceID: 1578}
     - Class: 114
-      Script: {instanceID: 1628}
+      Script: {instanceID: 1632}
     - Class: 114
-      Script: {instanceID: 1790}
+      Script: {instanceID: 1794}
     - Class: 114
-      Script: {instanceID: 2098}
+      Script: {instanceID: 2102}
     - Class: 114
-      Script: {instanceID: 2106}
+      Script: {instanceID: 2110}
     - Class: 114
-      Script: {instanceID: 2470}
+      Script: {instanceID: 2474}
     - Class: 114
-      Script: {instanceID: 2620}
+      Script: {instanceID: 2624}
     - Class: 114
-      Script: {instanceID: 2660}
+      Script: {instanceID: 2664}
     - Class: 114
-      Script: {instanceID: 2790}
+      Script: {instanceID: 2794}
     - Class: 114
-      Script: {instanceID: 2840}
+      Script: {instanceID: 2844}
     - Class: 114
-      Script: {instanceID: 2996}
+      Script: {instanceID: 3000}
     - Class: 114
-      Script: {instanceID: 3106}
+      Script: {instanceID: 3110}
     - Class: 114
-      Script: {instanceID: 3362}
+      Script: {instanceID: 3366}
     - Class: 114
-      Script: {instanceID: 4128}
+      Script: {instanceID: 4132}
     - Class: 114
-      Script: {instanceID: 4244}
+      Script: {instanceID: 4248}
     - Class: 114
-      Script: {instanceID: 4578}
+      Script: {instanceID: 4582}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128

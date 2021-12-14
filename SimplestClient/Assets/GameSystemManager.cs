@@ -21,8 +21,7 @@ public class GameSystemManager : MonoBehaviour
         chatInputEnterButton,
         chatInput,
         chatwindow,
-        observeGameRoomInputField
-        ;
+        observeGameRoomInputField;
 
     GameObject networkedClient;
 
@@ -133,8 +132,15 @@ public class GameSystemManager : MonoBehaviour
     
     void Update()
     {
-        WinnerCheck();
-
+        if (turnCount>4)
+        {
+            WinnerCheck();
+            if (turnCount == 9)
+            {
+                DrawCheck();
+            }
+        }
+        Debug.Log(turnCount);
     }
 
     private void SubmitButtonPress()
@@ -190,12 +196,10 @@ public class GameSystemManager : MonoBehaviour
     }
     private void ToggleCreateValueChanged(bool newValue)
     {
-        //Debug.Log("We Create!");
         toggleLogin.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
     private void ToggleLoginValueChanged(bool newValue)
     {
-        //Debug.Log("We Login!");
         toggleCreate.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
@@ -268,8 +272,7 @@ public class GameSystemManager : MonoBehaviour
         {
             if (solutions[i] == 3*(playerID+1))
             { 
-               
-               WinnerDisplay();
+                WinnerDisplay();
                return;
             }
         }
@@ -307,20 +310,27 @@ public class GameSystemManager : MonoBehaviour
 
     public void DrawButton(int buttonNumber, int buttonShape)
     {
+       
         tictactoeSpace[buttonNumber].image.sprite = playerIcons[buttonShape];
         tictactoeSpace[buttonNumber].interactable = false;
+        
         if (turnCount>4)
         {
             WinnerCheck();
         }
+        
 
-        if (turnCount == 9)
-        {
-            WinnerCheck();
-        }
+       
         turnCount++;
     }
 
+    public void DrawCheck()
+    {
+        systemMessage.gameObject.SetActive(true);
+        systemMessage.text = "You Draw!";
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.GameDraw.ToString());
+        DisableGamePlay();
+    }
     public void CleanButton(int buttonNumber, int buttonShape)
     {
         tictactoeSpace[buttonNumber].image.sprite = null;
@@ -386,7 +396,11 @@ public static class GameStates
     public const int WaitingForMatch = 3;
     
     public const int PlayingTicTacToe = 4;
-    //public const int Login = 1;
 
+}
+
+public class Replay
+{
+    
 }
 
